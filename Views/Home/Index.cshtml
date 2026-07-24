@@ -1,0 +1,77 @@
+@model IEnumerable<Web.Models.Product>
+
+@{
+    ViewData["Title"] = "Trang chủ - Cửa hàng";
+    var categories = ViewBag.Categories as List<Web.Models.Category> ?? new List<Web.Models.Category>();
+    var selectedCategoryId = ViewBag.SelectedCategoryId as int?;
+}
+
+<div class="text-center mb-5 mt-3">
+    <h1 class="fw-bold text-primary">Khám phá Sản phẩm</h1>
+    <p class="text-muted">Các sản phẩm công nghệ mới nhất đang chờ bạn</p>
+</div>
+
+<div class="row">
+    <!-- Sidebar: Danh mục -->
+    <div class="col-md-3 mb-4">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-2">
+                <h5 class="fw-bold mb-0"><i class="fas fa-list text-primary me-2"></i>Danh mục</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush rounded-3">
+                    <a asp-action="Index" asp-route-categoryId="" asp-route-keyword="@ViewBag.Keyword"
+                       class="list-group-item list-group-item-action border-0 @(selectedCategoryId == null ? "active fw-bold rounded-3 bg-primary" : "")">
+                        Tất cả sản phẩm
+                    </a>
+                    @foreach (var cat in categories)
+                    {
+                        <a asp-action="Index" asp-route-categoryId="@cat.Id" asp-route-keyword="@ViewBag.Keyword"
+                           class="list-group-item list-group-item-action border-0 @(selectedCategoryId == cat.Id ? "active fw-bold rounded-3 bg-primary" : "")">
+                            @cat.Name
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cột chính: Danh sách sản phẩm -->
+    <div class="col-md-9">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <div class="col">
+                        <div class="card h-100 shadow-sm border-0 bg-white">
+                            <div class="card-body d-flex flex-column rounded">
+                                <div class="mb-3 text-center py-4 rounded position-relative" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+                                    <i class="fas fa-box text-secondary" style="font-size: 3rem; opacity: 0.6;"></i>
+                                    @if(item.Category != null) {
+                                        <span class="badge bg-secondary position-absolute top-0 start-0 m-2">@item.Category.Name</span>
+                                    }
+                                </div>
+                                <h6 class="card-title text-truncate fw-bold mb-3" title="@item.Name">@item.Name</h6>
+                                <div class="mt-auto d-flex justify-content-between align-items-center">
+                                    <span class="text-danger fw-bolder fs-5">@item.Price.ToString("#,##0") đ</span>
+                                    <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@item.Id" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">
+                                        <i class="fas fa-cart-plus"></i> Mua
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center py-5 w-100">
+                    <i class="fas fa-box-open fa-4x text-muted mb-3"></i>
+                    <h4 class="text-muted">Không tìm thấy sản phẩm nào.</h4>
+                    <a asp-action="Index" class="btn btn-outline-primary mt-3 rounded-pill px-4">Tải lại trang</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

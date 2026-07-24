@@ -1,0 +1,51 @@
+@model Web.Models.Order
+
+@{
+    ViewData["Title"] = "Thanh toán";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-primary text-white text-center py-3 rounded-top-4">
+                    <h3 class="mb-0"><i class="fas fa-money-bill-wave"></i> Thanh toán khi nhận hàng (COD)</h3>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <p class="text-muted text-center mb-4">Vui lòng điền đầy đủ thông tin giao hàng bên dưới</p>
+                    
+                    <form asp-action="Index">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="CustomerName" class="form-control" id="floatingName" placeholder="Họ và tên" required />
+                            <label asp-for="CustomerName" for="floatingName">Họ và tên</label>
+                            <span asp-validation-for="CustomerName" class="text-danger small"></span>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="Phone" class="form-control" id="floatingPhone" placeholder="Số điện thoại" required />
+                            <label asp-for="Phone" for="floatingPhone">Số điện thoại liên hệ</label>
+                            <span asp-validation-for="Phone" class="text-danger small"></span>
+                        </div>
+                        
+                        <div class="form-floating mb-4">
+                            <textarea asp-for="Address" class="form-control" id="floatingAddress" placeholder="Địa chỉ giao hàng" style="height: 100px" required></textarea>
+                            <label asp-for="Address" for="floatingAddress">Địa chỉ giao hàng chi tiết</label>
+                            <span asp-validation-for="Address" class="text-danger small"></span>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg rounded-pill fw-bold shadow-sm">
+                                <i class="fas fa-check-circle"></i> Xác nhận Đặt Hàng
+                            </button>
+                            <a asp-controller="Cart" asp-action="Index" class="btn btn-light rounded-pill mt-2 text-muted">
+                                Quay lại giỏ hàng
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
