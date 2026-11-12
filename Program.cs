@@ -55,6 +55,41 @@ using (var scope = app.Services.CreateScope())
         );
         db.SaveChanges();
     }
+
+    if (app.Environment.IsDevelopment() && !db.Orders.Any())
+    {
+        var sampleProducts = db.Products.OrderBy(product => product.Id).Take(6).ToArray();
+
+        if (sampleProducts.Length == 6)
+        {
+            var sampleDate = DateTime.Today;
+            for (var orderIndex = 0; orderIndex < 3; orderIndex++)
+            {
+                var details = sampleProducts
+                    .Skip(orderIndex * 2)
+                    .Take(2)
+                    .Select((product, detailIndex) => new OrderDetail
+                    {
+                        ProductId = product.Id,
+                        Quantity = detailIndex + 1,
+                        UnitPrice = product.Price
+                    })
+                    .ToList();
+
+                db.Orders.Add(new Order
+                {
+                    CustomerName = $"Khách mẫu {orderIndex + 1:D2}",
+                    Address = $"Địa chỉ mẫu {orderIndex + 1:D2}",
+                    Phone = "0000000000",
+                    OrderDate = sampleDate.AddDays(-orderIndex - 1),
+                    TotalAmount = details.Sum(detail => detail.Quantity * detail.UnitPrice),
+                    OrderDetails = details
+                });
+            }
+
+            db.SaveChanges();
+        }
+    }
 }
 
 // 5. Cấu hình HTTP request pipeline
